@@ -1,0 +1,404 @@
+{% extends 'store/main.html' %}
+{% load static %}
+
+{% block content %}
+<style>
+  .register-container {
+    max-width: 450px;
+    margin: 80px auto;
+    padding: 40px;
+    background: #ffffff;
+    border-radius: 16px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+    animation: fadeIn 0.5s ease-in;
+  }
+
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(-20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .register-header {
+    text-align: center;
+    margin-bottom: 35px;
+  }
+
+  .register-header h2 {
+    color: #212529;
+    font-size: 32px;
+    font-weight: 700;
+    margin-bottom: 10px;
+    letter-spacing: -0.5px;
+  }
+
+  .register-header p {
+    color: #6c757d;
+    font-size: 15px;
+    margin: 0;
+  }
+
+  .form-group {
+    margin-bottom: 24px;
+    position: relative;
+  }
+
+  .form-group label {
+    display: block;
+    font-weight: 600;
+    color: #495057;
+    margin-bottom: 8px;
+    font-size: 14px;
+  }
+
+  .form-control {
+    width: 100%;
+    padding: 14px 16px 14px 45px;
+    font-size: 15px;
+    border: 2px solid #e0e0e0;
+    border-radius: 10px;
+    transition: all 0.3s ease;
+    background: #f8f9fa;
+    box-sizing: border-box;
+  }
+
+  .form-control:focus {
+    outline: none;
+    border-color: #ffc107;
+    background: #ffffff;
+    box-shadow: 0 0 0 4px rgba(255, 193, 7, 0.1);
+  }
+
+  .form-control::placeholder {
+    color: #adb5bd;
+  }
+
+  .input-icon {
+    position: absolute;
+    left: 16px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #adb5bd;
+    font-size: 18px;
+    pointer-events: none;
+  }
+
+  .password-toggle {
+    position: absolute;
+    right: 16px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    color: #6c757d;
+    cursor: pointer;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    font-size: 18px;
+  }
+
+  .password-toggle:hover {
+    color: #ffc107;
+  }
+
+  .btn-register {
+    width: 100%;
+    padding: 14px;
+    background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+    color: #fff;
+    border: none;
+    border-radius: 10px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin-top: 10px;
+    box-shadow: 0 4px 15px rgba(40, 167, 69, 0.3);
+  }
+
+  .btn-register:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(40, 167, 69, 0.4);
+    background: linear-gradient(135deg, #32cd32 0%, #26d9a1 100%);
+  }
+
+  .btn-register:active {
+    transform: translateY(0);
+  }
+
+  .password-strength {
+    margin-top: 8px;
+    height: 4px;
+    background: #e0e0e0;
+    border-radius: 2px;
+    overflow: hidden;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+
+  .password-strength.show {
+    opacity: 1;
+  }
+
+  .strength-bar {
+    height: 100%;
+    width: 0;
+    transition: all 0.3s ease;
+    border-radius: 2px;
+  }
+
+  .strength-bar.weak {
+    width: 33%;
+    background: #dc3545;
+  }
+
+  .strength-bar.medium {
+    width: 66%;
+    background: #ffc107;
+  }
+
+  .strength-bar.strong {
+    width: 100%;
+    background: #28a745;
+  }
+
+  .password-hint {
+    font-size: 12px;
+    color: #6c757d;
+    margin-top: 6px;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+
+  .password-hint.show {
+    opacity: 1;
+  }
+
+  .login-link {
+    text-align: center;
+    margin-top: 25px;
+    padding-top: 25px;
+    border-top: 1px solid #e0e0e0;
+  }
+
+  .login-link p {
+    color: #6c757d;
+    font-size: 15px;
+    margin: 0;
+  }
+
+  .login-link a {
+    color: #28a745;
+    text-decoration: none;
+    font-weight: 600;
+    transition: color 0.3s ease;
+  }
+
+  .login-link a:hover {
+    color: #20c997;
+    text-decoration: underline;
+  }
+
+  .features-list {
+    background: #f8f9fa;
+    border-radius: 10px;
+    padding: 20px;
+    margin-bottom: 25px;
+  }
+
+  .features-list h3 {
+    font-size: 14px;
+    font-weight: 600;
+    color: #495057;
+    margin-bottom: 12px;
+  }
+
+  .features-list ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  .features-list li {
+    font-size: 13px;
+    color: #6c757d;
+    padding: 6px 0;
+    padding-left: 24px;
+    position: relative;
+  }
+
+  .features-list li::before {
+    content: '✓';
+    position: absolute;
+    left: 0;
+    color: #28a745;
+    font-weight: bold;
+  }
+
+  /* Responsive */
+  @media (max-width: 576px) {
+    .register-container {
+      margin: 40px 20px;
+      padding: 30px 20px;
+    }
+
+    .register-header h2 {
+      font-size: 26px;
+    }
+  }
+</style>
+
+<div class="register-container">
+  <div class="register-header">
+    <h2>Create Account</h2>
+    <p>Join us and start shopping today</p>
+  </div>
+
+  <div class="features-list">
+    <h3>Why join us?</h3>
+    <ul>
+      <li>Fast and secure checkout</li>
+      <li>Track your orders easily</li>
+      <li>Exclusive deals and offers</li>
+      <li>Save items to your wishlist</li>
+    </ul>
+  </div>
+
+  <form method="POST">
+    {% csrf_token %}
+    
+    <div class="form-group">
+      <label for="username">Username</label>
+      <div style="position: relative;">
+        <i class="bi bi-person input-icon"></i>
+        <input 
+          type="text" 
+          id="username"
+          name="username" 
+          class="form-control"
+          placeholder="Choose a username" 
+          required
+          autocomplete="username"
+          minlength="3">
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="email">Email Address</label>
+      <div style="position: relative;">
+        <i class="bi bi-envelope input-icon"></i>
+        <input 
+          type="email" 
+          id="email"
+          name="email" 
+          class="form-control"
+          placeholder="your.email@example.com" 
+          required
+          autocomplete="email">
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="password">Password</label>
+      <div style="position: relative;">
+        <i class="bi bi-lock input-icon"></i>
+        <input 
+          type="password" 
+          id="password"
+          name="password" 
+          class="form-control"
+          placeholder="Create a strong password" 
+          required
+          autocomplete="new-password"
+          minlength="6"
+          oninput="checkPasswordStrength()">
+        <button type="button" class="password-toggle" onclick="togglePassword()">
+          <i class="bi bi-eye" id="toggleIcon"></i>
+        </button>
+      </div>
+      <div class="password-strength" id="passwordStrength">
+        <div class="strength-bar" id="strengthBar"></div>
+      </div>
+      <div class="password-hint" id="passwordHint">
+        Use at least 6 characters with a mix of letters and numbers
+      </div>
+    </div>
+
+    <button type="submit" class="btn-register">Create Account</button>
+  </form>
+
+  <div class="login-link">
+    <p>Already have an account? <a href="{% url 'login' %}">Login here</a></p>
+  </div>
+</div>
+
+<script>
+  function togglePassword() {
+    const passwordInput = document.getElementById('password');
+    const toggleIcon = document.getElementById('toggleIcon');
+    
+    if (passwordInput.type === 'password') {
+      passwordInput.type = 'text';
+      toggleIcon.className = 'bi bi-eye-slash';
+    } else {
+      passwordInput.type = 'password';
+      toggleIcon.className = 'bi bi-eye';
+    }
+  }
+
+  function checkPasswordStrength() {
+    const password = document.getElementById('password').value;
+    const strengthBar = document.getElementById('strengthBar');
+    const strengthContainer = document.getElementById('passwordStrength');
+    const hint = document.getElementById('passwordHint');
+    
+    if (password.length === 0) {
+      strengthContainer.classList.remove('show');
+      hint.classList.remove('show');
+      return;
+    }
+    
+    strengthContainer.classList.add('show');
+    hint.classList.add('show');
+    
+    let strength = 0;
+    
+    // Check length
+    if (password.length >= 6) strength++;
+    if (password.length >= 10) strength++;
+    
+    // Check for numbers
+    if (/\d/.test(password)) strength++;
+    
+    // Check for uppercase and lowercase
+    if (/[a-z]/.test(password) && /[A-Z]/.test(password)) strength++;
+    
+    // Check for special characters
+    if (/[^A-Za-z0-9]/.test(password)) strength++;
+    
+    // Remove all strength classes
+    strengthBar.classList.remove('weak', 'medium', 'strong');
+    
+    if (strength <= 2) {
+      strengthBar.classList.add('weak');
+      hint.textContent = 'Weak password - add more characters';
+      hint.style.color = '#dc3545';
+    } else if (strength <= 4) {
+      strengthBar.classList.add('medium');
+      hint.textContent = 'Good password - try adding special characters';
+      hint.style.color = '#ffc107';
+    } else {
+      strengthBar.classList.add('strong');
+      hint.textContent = 'Strong password! ✓';
+      hint.style.color = '#28a745';
+    }
+  }
+</script>
+
+{% endblock content %}

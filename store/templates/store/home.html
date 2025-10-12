@@ -1,0 +1,26 @@
+{% extends 'store/main.html' %}
+{% load static %}
+{% block content %}
+    <section id="hero" style="
+        background-image: url('{% static 'images/IMG_3354.JPG' %}');
+        height: 90vh;
+        width: 100%;
+        background-size: cover;
+        background-position: top 25% right 0;
+        padding: 0 80px;
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        justify-content: center;
+        animation: fadeIn 1.2s ease-in-out;
+        border-radius: 4px;
+    " >
+      <h4>Trade in-offer</h4>
+      <h2>Super value deals</h2>
+      <h1>On all products</h1>
+      <p>Save more with coupons & up to 70% off!</p>
+      <a href="{% url 'store' %}" class="btn btn-outline-secondary add-btn" >
+         Shop Now
+      </a>
+    </section>
+{% endblock content %}
